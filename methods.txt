@@ -1,4 +1,7 @@
 PATH
+/register/:usertype
+ 
+req:{}
 /login
 req:{userName,password}
 res:{accessToken,customer||supplier}
