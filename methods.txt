@@ -1,0 +1,46 @@
+PATH
+/login
+req:{userName,password}
+res:{accessToken,customer||supplier}
+
+=================================================
+METHODS
+===routes===
+authorizationRoute or authorizationRouteCustomer/authorizationRouteSupplier  
+
+===Controller===
+userName customer/supplier จะไม่ซ้ำกัน
+authorizationController
+-export
+    -customerLogin
+    -supplierLogin
+    -customerRegister
+    -supplierRegister
+
+authorizationValidator
+    export
+        -register
+        -login
+
+
+
+===Middleware=== 
+rateLimit
+    export
+        -rateLimit
+
+
+errorMiddleware
+    export
+        -errorMiddleware
+
+
+notfoundMiddleware
+    export
+        -notfoundMiddleware
+
+
+
+===orm===
+    export
+        prismaClient
