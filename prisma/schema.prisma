@@ -38,6 +38,7 @@ model Supplier{
 //   name String 
 //   title String
 //   price Int
+//    category
 //   imageOne String
 //   imageTwo String
 //   imageThree String

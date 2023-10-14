@@ -185,11 +185,15 @@ const customerLogin= async(req,res,next)=>{
 //send getUser In req For other middleware 
 exports.getUserData = (req,res,next)=>{
     //check customer or 
-    const {usertype} = req.params;
-        console.log(usertype)
-        if(usertype=="customer")res.status(200).json({customer:req.customer});
-        else if(usertype=="supplier")res.status(200).json({supplier:req.supplier});
-        else res.status()
+    // const {usertype} = req.params;
+    //     console.log(usertype)
+    //     if(usertype=="customer")res.status(200).json({customer:req.customer});
+    //     else if(usertype=="supplier")res.status(200).json({supplier:req.supplier});
+    //     else res.status(401).json({message:"notFound"});
+    // console.log(req.customer);
+    
+    //req.user มาจาก authenticate middleware
+    res.status(200).json({user:req.user});
     
 }
 exports.register = register;
