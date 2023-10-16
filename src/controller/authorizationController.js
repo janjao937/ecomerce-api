@@ -56,7 +56,7 @@ const customerRegister= async(req,res,next)=>{
     try{
         //Validate
         const {value,error} = authorizationValidator.registerCustomerSchema.validate(req.body);
-        
+        console.log(value);
         if(error) return next(error);
         const checkUserName = await prismaClient.supplier.findFirst({
             where:{
@@ -79,7 +79,7 @@ const customerRegister= async(req,res,next)=>{
         const accessToken = jwt.sign(payload,process.JWT_SECRET_KEY ||"sdadwadwqldepofpwek",
         {expiresIn:process.env.JWT_EXPIRE});
         //Delete password
-        delete customer.id;
+        delete customer.password;
         res.status(201).json({accessToken,customer});
         // res.status(201).json({accessToken,customer});
     }
@@ -92,7 +92,7 @@ const supplierRegister= async(req,res,next)=>{
     try{
         //Validate
         const {value,error} = authorizationValidator.registerSupplierSchema.validate(req.body);
-        
+        console.log(value)
         if(error) return next(error);
         const checkUserName = await prismaClient.customer.findFirst({
             where:{
@@ -117,6 +117,7 @@ const supplierRegister= async(req,res,next)=>{
         const accessToken = jwt.sign(payload,process.JWT_SECRET_KEY ||"sdadwadwqldepofpwek",
         {expiresIn:process.env.JWT_EXPIRE});
         //Delete password
+        delete supplier.password;
         res.status(201).json({accessToken,supplier});
         // res.status(201).json({accessToken,customer});
     }
@@ -180,19 +181,9 @@ const customerLogin= async(req,res,next)=>{
 
 
 
-
-
 //send getUser In req For other middleware 
 exports.getUserData = (req,res,next)=>{
-    //check customer or 
-    // const {usertype} = req.params;
-    //     console.log(usertype)
-    //     if(usertype=="customer")res.status(200).json({customer:req.customer});
-    //     else if(usertype=="supplier")res.status(200).json({supplier:req.supplier});
-    //     else res.status(401).json({message:"notFound"});
-    // console.log(req.customer);
-    
-    //req.user มาจาก authenticate middleware
+
     res.status(200).json({user:req.user});
     
 }

@@ -31,16 +31,23 @@ model Supplier{
   email String
   mobile String
   password String
+  product Product[]
 }
 
-// model Product{
+model Product{
+  id Int @id @default(autoincrement())
+  name String 
+  title String
+  price Int
+  img String
+  supplierId String
+  supplier Supplier @relation(fields: [supplierId],references: [id])
+  // productImg ProductImg
+}
+
+// model ProductImg{
 //   id Int @id @default(autoincrement())
-//   name String 
-//   title String
-//   price Int
-//    category
-//   imageOne String
-//   imageTwo String
-//   imageThree String
-//   imageFour String
+//   img String
+//   productId Int 
+//   product Product @relation(fields: [productId],references: [id])
 // }

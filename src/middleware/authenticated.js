@@ -13,18 +13,23 @@ module.exports = async(req,res,next)=>{
         
         //jwt verify token
         const payload = jwt.verify(token,process.env.JWT_SECRET_KEY||"asdadfv");
-        const checkUseSub = await prismaClient.supplier.findFirst({
-            where:{
-                id:payload.id
-            }
-        });
-        const checkUserCus = await prismaClient.customer.findFirst({
-            where:{
-                id:payload.id
-            }
-        });
-        const user = checkUserCus||checkUseSub;
-
+        let user = null
+        if( payload.customerId){
+            user= await prismaClient.customer.findFirst({
+                where:{
+                    id:payload.customerId
+                }
+            });
+        }
+        if(payload.supplierId){
+           user = await prismaClient.supplier.findFirst({
+                where:{
+                    id:payload.supplierId
+                }
+            });
+        }
+        // const user = payload.customerId||payload.supplierId;
+        // console.log(payload.supplierId)
 
         if(!user){
             return next(createError("unauthenticated",401));
