@@ -17,7 +17,7 @@ const router= express.Router();
 router.post("/add",authenticate,useProductController.CreateProduct);
 router.delete("/remove/:productId",authenticate,useProductController.DeleteProduct);
 router.patch("/update/:productId",authenticate,useProductController.EditProductData);
-
+router.get("/:productId",useProductController.GetProductById);
 
 
 module.exports = router;

@@ -68,7 +68,7 @@ const DeleteProduct = async (req, res, next) => {
     {
         const productId = +req.params.productId;
         console.log(productId)
-        const { value, error } = productValidator.checkProductIdSchema.validate({productId});//validate product 
+        const { value, error } = productValidator.checkProductIdSchema.validate({ productId });//validate product 
 
         if (error) {
             return next(error);
@@ -85,70 +85,101 @@ const DeleteProduct = async (req, res, next) => {
                 id: deleteProduct.id
             }
         });
-        res.status(200).json({message:"Delete Complete"})
+        res.status(200).json({ message: "Delete Complete" })
     }
-    catch(error){
+    catch (error) {
         next(error);
     }
 
 }
 
-    //Edit
-    //name/price/title/img
-    // const editProduct = {
-        //     id Int 
-        //     name String 
-        //     title String
-        //     price Int    
-        //     img String
-    //}
+//Edit
+//name/price/title/img
+// const editProduct = {
+//     id Int 
+//     name String 
+//     title String
+//     price Int    
+//     img String
+//}
 
 // product/update/:productId
-const EditProductData = async(req, res, next) => {
-    // const editProp = req.params.editProp;
-    const productId = +req.params.productId;
-    const { value, error } = productValidator.checkProductIdSchema.validate({productId});
-    const updateData = req.body;//{name,title,price,img,amount}
+const EditProductData = async (req, res, next) => {
+    try {
+        // const editProp = req.params.editProp;
+        const productId = +req.params.productId;
+        const { value, error } = productValidator.checkProductIdSchema.validate({ productId });
+        const updateData = req.body;//{name,title,price,img,amount}
 
-    if(error){
-        return next(error);
-    }
-
-    const editProductData = await prismaClient.product.findFirst({
-        where:{
-            id:value.productId
+        if (error) {
+            return next(error);
         }
-    });
 
-    if(!editProductData){
-        const err = new Error("invalid product");
-        err.status=404;
-        return err;
-    }
+        const editProductData = await prismaClient.product.findFirst({
+            where: {
+                id: value.productId
+            }
+        });
 
-    const updateObj =  await prismaClient.product.update({
-        data:{
-            name:updateData.name,
-            title:updateData.title,
-            price:updateData.price,
-            img:updateData.img,
-            amount:updateData.amount
-        },
-        where:{
-            id:value.productId
+        if (!editProductData) {
+            const err = new Error("invalid product");
+            err.status = 404;
+            return next(err);
         }
-    });
 
-    // console.log(productId);
-    // console.log(editProductData);
-    // console.log(editProductData["name"]);
+        const updateObj = await prismaClient.product.update({
+            data: {
+                name: updateData.name,
+                title: updateData.title,
+                price: updateData.price,
+                img: updateData.img,
+                amount: updateData.amount
+            },
+            where: {
+                id: value.productId
+            }
+        });
 
-    // console.log(editProductData.name);
-    res.status(200).json({message:"editComplete",editProductData,updateObj})
+        // console.log(productId);
+        // console.log(editProductData);
+        // console.log(editProductData["name"]);
 
-
+        // console.log(editProductData.name);
+        res.status(200).json({ message: "editComplete", updateObj })
+    }
+    catch (error) {
+        next(error);
+    }
 }
+
+const GetProductById = async (req,res,next)=>{
+    try{
+        const productId = +req.params.productId;
+        const { value, error } = productValidator.checkProductIdSchema.validate({ productId });
+        if (error) {
+            return next(error);
+        }
+
+        const productData = await prismaClient.product.findFirst({
+            where: {
+                id: value.productId
+            }
+        });
+        if (!productData) {
+            const err = new Error("product not found");
+            err.status = 404;
+            return next(err);
+        }
+        
+
+        res.status(200).json({productData})
+    }
+    catch(error){
+        next(error);
+    }
+} 
 
 exports.CreateProduct = CreateProduct;
 exports.EditProductData = EditProductData;
 exports.DeleteProduct = DeleteProduct;
+exports.GetProductById = GetProductById;
