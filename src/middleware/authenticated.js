@@ -35,7 +35,7 @@ module.exports = async(req,res,next)=>{
             return next(createError("unauthenticated",401));
         }
         delete user.password;
-        req.user = user;
+        req.user = user;//add user in middleware
         
         next();
     }

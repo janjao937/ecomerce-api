@@ -11,6 +11,7 @@ const notFoundMiddleware = require("./middleware/notFoundMiddleware");
 
 //route
 const authorizationRoute = require("./routes/authorizationRoute");
+const productRoute = require("../src/routes/productRoute");
 
 //init
 const port = process.env.PORT||8000;
@@ -22,6 +23,7 @@ app.use(rateLimit);
 
 //register/login (Authorization)
 app.use("/auth",authorizationRoute);
+app.use("/product",productRoute);
 
 
 //customer req.customer
