@@ -16,10 +16,12 @@ const prismaClient = require("../orm/prismaClient");
 const CreateProduct = async (req, res, next) => {
     //create col product
     try {
-        const productData = req.body;//{name,title,price,img,amount} //from front
+        const productData = JSON.parse(req.body.product);//{name,title,price,img,amount} //from front
+        // const p = req.body.inputForm
         const supplierId = req.user.id;
+        const img = req.file.filename;
 
-        console.log(productData)
+        // console.log(req.filename)
         //check data
         //{name,title,price,img,supplierId,amount}
         const newProduct = await prismaClient.product.create({
@@ -27,9 +29,9 @@ const CreateProduct = async (req, res, next) => {
                 supplierId: supplierId,
                 name: productData.name,
                 title: productData.title,
-                price: productData.price,
-                img: productData.img,
-                amount: productData.amount
+                price: +productData.price,
+                img: img,
+                amount: +productData.amount
             },
             include: {
                 supplier: {
@@ -52,11 +54,12 @@ const CreateProduct = async (req, res, next) => {
         //   }
 
         console.log(newProduct);
-
+ 
         res.status(201).json({ message: "Product Create", newProduct })
 
     }
     catch (error) {
+        // console.log(req.body)
         next(error);
     }
 
@@ -151,6 +154,26 @@ const EditProductData = async (req, res, next) => {
         next(error);
     }
 }
+//supplier
+const GetProductBySupplierId = async(req,res,next) =>{
+    try{
+        const supplierId = req.user.id;
+        const allProduct = await prismaClient.product.findMany({
+            where:{
+                supplierId:supplierId
+            }
+        });
+        if (!allProduct) {
+            const err = new Error("product not found");
+            err.status = 404;
+            return next(err);
+        }
+        res.status(200).json({allProduct});
+    }
+    catch(error){
+        next(error);
+    }
+}
 
 const GetProductById = async (req,res,next)=>{
     try{
@@ -179,7 +202,22 @@ const GetProductById = async (req,res,next)=>{
     }
 } 
 
+
+const GetSomeProduct =   async (req,res,next)=>{
+    try{
+        const products = await prismaClient.product.findMany({
+            take:20
+        })
+        res.status(200).json({products});
+    }
+    catch(error){
+        next(error);
+    }
+}
+
 exports.CreateProduct = CreateProduct;
 exports.EditProductData = EditProductData;
 exports.DeleteProduct = DeleteProduct;
 exports.GetProductById = GetProductById;
+exports.GetProductBySupplierId = GetProductBySupplierId;
+exports.GetSomeProduct = GetSomeProduct;
