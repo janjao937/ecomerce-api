@@ -7,7 +7,7 @@ const prismaClient = require("../orm/prismaClient");
 // customerId String
 // customer Customer @relation(fields: [customerId],references: [id],onDelete: Cascade)
 
-//"/postcreate"
+//"/create"
 const CreateGameData = async(req,res,next) =>{
     try{
         const score = req.body.score;//"score" from front
@@ -36,7 +36,8 @@ const CreateGameData = async(req,res,next) =>{
     }
     
 }
-//"/patchupdate"
+//"/update"
+//patch
 const UpdateGameData = async(req,res,next) =>{
     try{
         const score = req.body.score;//"score" from front
@@ -48,7 +49,7 @@ const UpdateGameData = async(req,res,next) =>{
             }
         });
         if(!player){
-            CreateGameData(req,res,next);//create if invalid
+            next(CreateGameData(req,res,next));//create if invalid
         }
 
         if(score<=player.heightScore){
@@ -67,7 +68,8 @@ const UpdateGameData = async(req,res,next) =>{
         next(error);
     }
 }
-//"/getleaderboard"
+//"/leaderboard"
+//get
 const GetLeaderboardData = async(req,res,next) =>{
     try{
         const leaderboardData = await prismaClient.game.findMany({
@@ -84,7 +86,7 @@ const GetLeaderboardData = async(req,res,next) =>{
             take:5
         
         });
-
+        console.log(leaderboardData);
         res.status(200).json({leaderboardData});//res:leaderboardData
 
     }
