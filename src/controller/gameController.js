@@ -42,6 +42,11 @@ const UpdateGameData = async(req,res,next) =>{
     try{
         const score = req.body.score;//"score" from front
         const customerId = req.user.id;
+        if(customerId?.shopName){
+            const err = new Error("you are not customer");
+            err.status = 404;
+            return next(err);
+        }
 
         const player = await prismaClient.game.findFirst({
             where:{
