@@ -19,6 +19,7 @@ model Customer{
   mobile String
   password String
   cart Cart[]
+  game Game[]
 }
 
 model Supplier{
@@ -59,6 +60,14 @@ model Cart{
   id Int @id @default(autoincrement())
   productId Int
   product Product @relation(fields: [productId],references: [id],onDelete: Cascade)
+  customerId String
+  customer Customer @relation(fields: [customerId],references: [id],onDelete: Cascade)
+}
+
+model Game{
+  id Int @id @default(autoincrement())
+  updatedAt DateTime @updatedAt
+  heightScore Int
   customerId String
   customer Customer @relation(fields: [customerId],references: [id],onDelete: Cascade)
 }
