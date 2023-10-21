@@ -109,11 +109,16 @@ const DeleteProduct = async (req, res, next) => {
 // product/update/:productId
 const EditProductData = async (req, res, next) => {
     try {
-        // const editProp = req.params.editProp;
+        // const updateData = req.body;//{name,title,price,img,amount}
+        console.log(req.body)
         const productId = +req.params.productId;
-        const { value, error } = productValidator.checkProductIdSchema.validate({ productId });
-        const updateData = req.body;//{name,title,price,img,amount}
+        // const updateData = JSON.parse(req.body.product);//{name,title,price,img,amount}
+        const updateData = req.body
+        
+        // const img = req.file.filename;
 
+        const { value, error } = productValidator.checkProductIdSchema.validate({ productId });
+    
         if (error) {
             return next(error);
         }
@@ -134,9 +139,8 @@ const EditProductData = async (req, res, next) => {
             data: {
                 name: updateData.name,
                 title: updateData.title,
-                price: updateData.price,
-                img: updateData.img,
-                amount: updateData.amount
+                price: +updateData.price,
+                amount: +updateData.amount
             },
             where: {
                 id: value.productId
@@ -148,7 +152,7 @@ const EditProductData = async (req, res, next) => {
         // console.log(editProductData["name"]);
 
         // console.log(editProductData.name);
-        res.status(200).json({ message: "editComplete", updateObj })
+        res.status(200).json({ message: "editComplete", updateObj })//res message,updateObj
     }
     catch (error) {
         next(error);

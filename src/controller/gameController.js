@@ -28,7 +28,7 @@ const CreateGameData = async(req,res,next) =>{
         });
 
         console.log(newPlayer);
-        res.status(201).json({message:"create new player",newPlayer});
+        res.status(201).json({message:"create new player",newPlayer});//res newPlayer
 
     }
     catch(error){
@@ -67,7 +67,7 @@ const UpdateGameData = async(req,res,next) =>{
             }
         });
         console.log(updateScore);
-        res.status(200).json({message:"update height score"});
+        res.status(200).json({message:"update height score"});//res message
     }
     catch(error){
         next(error);

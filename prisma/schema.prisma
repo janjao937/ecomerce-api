@@ -20,6 +20,7 @@ model Customer{
   password String
   cart Cart[]
   game Game[]
+  // payment Payment[]
 }
 
 model Supplier{
@@ -34,6 +35,7 @@ model Supplier{
   mobile String
   password String
   product Product[]
+  // payment Payment[]
 }
 
 model Product{
@@ -58,6 +60,8 @@ model Product{
 
 model Cart{
   id Int @id @default(autoincrement())
+  amount Int 
+  isOrderStatus Int
   productId Int
   product Product @relation(fields: [productId],references: [id],onDelete: Cascade)
   customerId String
@@ -71,3 +75,28 @@ model Game{
   customerId String
   customer Customer @relation(fields: [customerId],references: [id],onDelete: Cascade)
 }
+
+//abount payment
+model Admin{
+  id String @id @default(cuid())
+  username String
+  password String
+}
+// model Payment{
+//   id Int @id @default(autoincrement())
+  
+//   supplierId String
+//   supplier Supplier @relation(fields: [supplierId],references: [id],onDelete: Cascade)
+//   customerId String
+//   customer Customer @relation(fields: [customerId],references: [id],onDelete: Cascade)
+//   createdAt DateTime @default(now())
+
+// }
+
+//order 
+//adress string
+//sendingStatus
+//payingStatus
+//customerId
+//SupplierId
+//
