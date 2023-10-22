@@ -31,6 +31,45 @@ model Cart{
 //     }
 // });
 
+//get
+const GetCartByCustomerId = async(req,res,next)=>{
+    try{
+        // const productId = req.body.productId;
+        const customerId = req.user.id;
+        const userCartData = await prismaClient.cart.findMany({
+            where:{
+                customerId:customerId
+            }
+        });
+        // const cartsData = await prismaClient.cart.findMany({
+        //     where:{
+        //         productId:productId,
+        //         customerId:customerId
+        //     },
+        //     include:{
+        //         product:{
+        //             include:{
+        //                supplier:{
+        //                 select:{
+        //                     supplierId:true,
+        //                     shopName:true
+        //                 }
+        //                }
+        //             }
+        //         }
+        //     }
+        // });
+
+
+
+        res.status(200).json({message:"success",userCartData});
+
+
+    }
+    catch(error){
+        next(error);
+    }
+}
 //post
 const CreateCartItems=async(req,res,next)=>{
     try{
@@ -141,17 +180,20 @@ const DecreseAmount=async(req,res,next)=>{
     }
 }
 //delete
+//"/delete"
 const DeleteItem = async(req,res,next)=>{
     try{
-        const productId = +req.body.productId;//req:productId
+        // const productId = +req.body.productId; //req:productId
+        const productId = +req.params.productId;
         const customerId = req.user.id;
-
-        const cartItem = prismaClient.cart.findFirst({
+        console.log(productId);
+        const cartItem = await prismaClient.cart.findFirst({
             where:{
                 productId:productId,
                 customerId:customerId
             }
         });
+        console.log(cartItem);
 
         if(!cartItem){
             const err = new Error("dont have this product in cart");
@@ -160,11 +202,10 @@ const DeleteItem = async(req,res,next)=>{
         }
         const deleteItem = await prismaClient.cart.delete({
             where:{
-                productId:productId,
+                id:cartItem.id,
                 customerId:customerId
             }
-        })
-
+        });
         
         res.status(200).json({message:"delete complete",deleteItem});
         
@@ -175,15 +216,15 @@ const DeleteItem = async(req,res,next)=>{
     }
 }
 
-//delete
-const DeletCartItemByCustomerId = async(req,res,next)=>{
-    try{
+// //delete
+// const DeletCartItemByCustomerId = async(req,res,next)=>{
+//     try{
 
-    }
-    catch(error){
-        next(error);
-    }
-}
+//     }
+//     catch(error){
+//         next(error);
+//     }
+// }
 // const CreateOrder = async(req,res,next)=>{
 //     try{
 
@@ -198,7 +239,8 @@ const DeletCartItemByCustomerId = async(req,res,next)=>{
 
 exports.CreateCartItems = CreateCartItems;//post
 exports.DeleteItem = DeleteItem;//delete
-exports.DeletCartItemByCustomerId = DeletCartItemByCustomerId;
+// exports.DeletCartItemByCustomerId = DeletCartItemByCustomerId;
 exports.IncreseAmount = IncreseAmount;//patch
 exports.DecreseAmount = DecreseAmount;//patch
+exports.GetCartByCustomerId = GetCartByCustomerId;//get
 

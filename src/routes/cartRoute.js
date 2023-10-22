@@ -9,9 +9,10 @@ const router= express.Router();
 //useCartController
 
 router.post("/create",authenticate,cartRoute.CreateCartItems);
-router.delete("/delete",authenticate,cartRoute.DeleteItem);
+router.delete("/delete/:productId",authenticate,cartRoute.DeleteItem);
 router.patch("/add",authenticate,cartRoute.IncreseAmount);
 router.patch("/remove",authenticate,cartRoute.DecreseAmount);
+router.get("/",authenticate,cartRoute.GetCartByCustomerId);
 
 
 
