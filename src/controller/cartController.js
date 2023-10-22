@@ -35,12 +35,12 @@ model Cart{
 const CreateCartItems=async(req,res,next)=>{
     try{
         const productId = +req.body.productId;//req:productId
-        const customerId = req.user;
+        const customerId = req.user.id;
         
-        console.log(cartItem);
+        // console.log(customerId);
         const product = await prismaClient.product.findFirst({
             where:{
-                productId:productId
+                id:productId
             }
         });
 
@@ -66,40 +66,12 @@ const CreateCartItems=async(req,res,next)=>{
         next(error);
     }
 }
+
 //patch
 const IncreseAmount=async(req,res,next)=>{
     try{
         const productId = +req.body.productId;//req:productId
-        const customerId = req.user;
-
-        const cartItem = prismaClient.cart.findFirst({
-            where:{
-                productId:productId
-            }
-        });
-
-        
-        if(!cartItem){
-            const err = new Error("you must create cart");
-            err.status = 404;
-            return next(err);
-        }
-        const updateCart =await prismaClient.cart.update({
-            amount:cartItem.amount++
-        });
-        
-        res.status(200).json({message:"success",updateCart});//res:updateCart
-
-    }
-    catch(error){
-        next(error);
-    }
-}
-//patch
-const DecreseAmount=async(req,res,next)=>{
-    try{
-        const productId = +req.body.productId;//req:productId
-        const customerId = req.user;
+        const customerId = req.user.id;
 
         const cartItem = await prismaClient.cart.findFirst({
             where:{
@@ -114,15 +86,53 @@ const DecreseAmount=async(req,res,next)=>{
             err.status = 404;
             return next(err);
         }
-        if(cartItem.amount<=1){
-            return DeleteItem(req,res,next);
-        }
+        // console.log(cartItem.amount)
         const updateCart =await prismaClient.cart.update({
-            amount:cartItem.amount--
+            where:{
+                id:cartItem.id
+            },
+            data:{
+                amount:++cartItem.amount
+            }
         });
         
         res.status(200).json({message:"success",updateCart});//res:updateCart
 
+    }
+    catch(error){
+        next(error);
+    }
+}
+//patch
+const DecreseAmount=async(req,res,next)=>{
+    try{
+        const productId = +req.body.productId;//req:productId
+        const customerId = req.user.id;
+
+        const cartItem = await prismaClient.cart.findFirst({
+            where:{
+                productId:productId,
+                customerId:customerId
+            }
+        });
+
+        
+        if(!cartItem){
+            const err = new Error("you must create cart");
+            err.status = 404;
+            return next(err);
+        }
+        // console.log(cartItem.amount)
+        const updateCart =await prismaClient.cart.update({
+            where:{
+                id:cartItem.id
+            },
+            data:{
+                amount:--cartItem.amount
+            }
+        });
+        
+        res.status(200).json({message:"success",updateCart});//res:updateCart
 
     }
     catch(error){
@@ -134,7 +144,7 @@ const DecreseAmount=async(req,res,next)=>{
 const DeleteItem = async(req,res,next)=>{
     try{
         const productId = +req.body.productId;//req:productId
-        const customerId = req.user;
+        const customerId = req.user.id;
 
         const cartItem = prismaClient.cart.findFirst({
             where:{
@@ -174,6 +184,17 @@ const DeletCartItemByCustomerId = async(req,res,next)=>{
         next(error);
     }
 }
+// const CreateOrder = async(req,res,next)=>{
+//     try{
+
+//     }
+//     catch(error){
+
+//     }
+
+// }
+
+
 
 exports.CreateCartItems = CreateCartItems;//post
 exports.DeleteItem = DeleteItem;//delete
