@@ -13,6 +13,8 @@ const notFoundMiddleware = require("./middleware/notFoundMiddleware");
 const authorizationRoute = require("./routes/authorizationRoute");
 const productRoute = require("../src/routes/productRoute");
 const cartRoute = require("../src/routes/cartRoute");
+const SupplierQrPaymentRoute = require("../src/routes/SupplierQrPaymentRoute");
+
 
 //init
 const port = process.env.PORT||8000;
@@ -27,6 +29,7 @@ app.use(express.static("public"))
 app.use("/auth",authorizationRoute);
 app.use("/product",productRoute);
 app.use("/cart",cartRoute);
+app.use("/qr",SupplierQrPaymentRoute);
 
 
 //customer req.customer

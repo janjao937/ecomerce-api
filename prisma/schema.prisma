@@ -29,7 +29,7 @@ model Supplier{
   lastName String
   userName String @unique
   shopName String @unique
-  shopImage String?
+  paymentQrImg String?
   // paymentQrImg String  after "Test" login/register 
   email String
   mobile String
@@ -76,12 +76,10 @@ model Game{
   customer Customer @relation(fields: [customerId],references: [id],onDelete: Cascade)
 }
 
-//abount payment
-model Admin{
-  id String @id @default(cuid())
-  username String
-  password String
-}
+//abount order
+
+
+
 // model Payment{
 //   id Int @id @default(autoincrement())
   

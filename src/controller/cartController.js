@@ -31,6 +31,7 @@ model Cart{
 //     }
 // });
 
+
 //get
 const GetCartByCustomerId = async(req,res,next)=>{
     try{
@@ -39,26 +40,22 @@ const GetCartByCustomerId = async(req,res,next)=>{
         const userCartData = await prismaClient.cart.findMany({
             where:{
                 customerId:customerId
+            },
+            include:{
+                product:{
+                    include:{
+                        supplier:{
+                            select:{
+                                shopName:true
+                                
+                            }
+                          
+                        }
+                    }
+                }
             }
         });
-        // const cartsData = await prismaClient.cart.findMany({
-        //     where:{
-        //         productId:productId,
-        //         customerId:customerId
-        //     },
-        //     include:{
-        //         product:{
-        //             include:{
-        //                supplier:{
-        //                 select:{
-        //                     supplierId:true,
-        //                     shopName:true
-        //                 }
-        //                }
-        //             }
-        //         }
-        //     }
-        // });
+
 
 
 
