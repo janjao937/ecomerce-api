@@ -66,6 +66,7 @@ model Cart{
   product Product @relation(fields: [productId],references: [id],onDelete: Cascade)
   customerId String
   customer Customer @relation(fields: [customerId],references: [id],onDelete: Cascade)
+  order Order[]
 }
 
 model Game{
@@ -77,6 +78,15 @@ model Game{
 }
 
 //abount order
+model Order{
+ id Int @id @default(autoincrement())
+ createdAt DateTime @default(now())
+ customerSlipImg String
+ deliveryStatus Int   //0 1
+ adress String
+ cartId Int
+ cart Cart @relation(fields: [cartId],references: [id],onDelete: Cascade)
+}
 
 
 

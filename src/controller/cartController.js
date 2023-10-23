@@ -39,14 +39,16 @@ const GetCartByCustomerId = async(req,res,next)=>{
         const customerId = req.user.id;
         const userCartData = await prismaClient.cart.findMany({
             where:{
-                customerId:customerId
+                customerId:customerId,
+                isOrderStatus:0
             },
             include:{
                 product:{
                     include:{
                         supplier:{
                             select:{
-                                shopName:true
+                                shopName:true,
+                                paymentQrImg:true
                                 
                             }
                           

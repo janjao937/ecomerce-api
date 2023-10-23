@@ -14,6 +14,7 @@ const authorizationRoute = require("./routes/authorizationRoute");
 const productRoute = require("../src/routes/productRoute");
 const cartRoute = require("../src/routes/cartRoute");
 const SupplierQrPaymentRoute = require("../src/routes/SupplierQrPaymentRoute");
+const orderRoute = require("../src/routes/orderRoute");
 
 
 //init
@@ -30,7 +31,7 @@ app.use("/auth",authorizationRoute);
 app.use("/product",productRoute);
 app.use("/cart",cartRoute);
 app.use("/qr",SupplierQrPaymentRoute);
-
+app.use("/order",orderRoute);
 
 //customer req.customer
 //supplier  req.supplier
