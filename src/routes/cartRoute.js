@@ -8,9 +8,12 @@ const router= express.Router();
 //middleware
 //useCartController
 
+router.post("/add-item",authenticate,cartRoute.CreateOrUpdateCartItem);//new add and Create item in cart
+
 router.post("/create",authenticate,cartRoute.CreateCartItems);
-router.delete("/delete/:productId",authenticate,cartRoute.DeleteItem);
 router.patch("/add",authenticate,cartRoute.IncreseAmount);
+
+router.delete("/delete/:productId",authenticate,cartRoute.DeleteItem);
 router.patch("/remove",authenticate,cartRoute.DecreseAmount);
 router.get("/",authenticate,cartRoute.GetCartByCustomerId);
 

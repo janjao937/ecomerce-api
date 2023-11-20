@@ -8,7 +8,9 @@ const router= express.Router();
 
 router.post("/create",authenticate,uploadMiddleware.single("image"),orderController.createOrder);
 router.patch("/update",authenticate,orderController.updateOrder);
+
 router.get("/",authenticate,orderController.getOrderItemByIsOrderStatusAtCart);
+router.get("/supplier",authenticate,orderController.supplierGetOrder);
 
 
 

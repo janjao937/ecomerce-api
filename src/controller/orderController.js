@@ -59,12 +59,14 @@ const getOrderItemByIsOrderStatusAtCart = async(req,res,next)=>{
                     select:{
                         price:true,
                         name:true,
+                        img:true
                     }
-                }
+                },
+                order:true
             }
         });
        
-
+        
         res.status(200).json({message:"success",allOrder});
     }
     catch(error){
@@ -72,6 +74,50 @@ const getOrderItemByIsOrderStatusAtCart = async(req,res,next)=>{
     }
 
 }
+
+// get/supplier
+const supplierGetOrder = async(req,res,next)=>{
+    try{
+        const supplierId = req.user.id;
+    
+        const allSupplierProduct= await prismaClient.product.findMany({
+            where:{
+                supplierId:supplierId
+            },
+            include:{
+                cart:{
+                    include:{
+                        order:{
+                            select:{
+                                id:true
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        // // allSupplierProduct.cart.cartId
+     
+        // const allBuy = await prismaClient.order.findMany({
+        //     where:{
+        //         OR:[
+        //             {
+        //                 cartId:{
+        //                     contains:5
+        //                 }
+        //             }
+        //         ]
+        //     }
+        // })
+        res.status(200).json({message:"supplier order",allSupplierProduct})
+
+    }
+    catch(error){
+        console.log(error);
+    }
+
+}
+
 // path /update
 const updateOrder = async(req,res,next) =>{
     try{
@@ -85,4 +131,4 @@ const updateOrder = async(req,res,next) =>{
 exports.createOrder = createOrder;
 exports.updateOrder = updateOrder;
 exports.getOrderItemByIsOrderStatusAtCart = getOrderItemByIsOrderStatusAtCart;
-
+exports.supplierGetOrder = supplierGetOrder;

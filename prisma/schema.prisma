@@ -82,7 +82,7 @@ model Order{
  id Int @id @default(autoincrement())
  createdAt DateTime @default(now())
  customerSlipImg String
- deliveryStatus Int   //0 1
+ deliveryStatus Int   //0 waiting 1 pending 2 DeliverySuccess
  adress String
  cartId Int
  cart Cart @relation(fields: [cartId],references: [id],onDelete: Cascade)

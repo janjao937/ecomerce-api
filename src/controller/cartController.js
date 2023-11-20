@@ -114,7 +114,7 @@ const IncreseAmount=async(req,res,next)=>{
         const cartItem = await prismaClient.cart.findFirst({
             where:{
                 productId:productId,
-                customerId:customerId
+                customerId:customerId,
             }
         });
 
@@ -215,31 +215,91 @@ const DeleteItem = async(req,res,next)=>{
     }
 }
 
-// //delete
-// const DeletCartItemByCustomerId = async(req,res,next)=>{
-//     try{
+//update code in 11/20
 
-//     }
-//     catch(error){
-//         next(error);
-//     }
-// }
-// const CreateOrder = async(req,res,next)=>{
-//     try{
+//new add item
+const AddItemInCart = async(cartItem,res,next) =>{
+    try{
+        
+        if(!cartItem){
+            const err = new Error("you must create cart");
+            err.status = 404;
+            return next(err);
+        }
+        // console.log(cartItem.amount)
+        const updateCart =await prismaClient.cart.update({
+            where:{
+                id:cartItem.id,
+                isOrderStatus:cartItem.isOrderStatus
+            },
+            data:{
+                amount:++cartItem.amount
+            }
+        });
+        
+        res.status(200).json({message:"success",updateCart});//res:updateCart
 
-//     }
-//     catch(error){
 
-//     }
+    }
+    catch(error){
+        return next(error);
+    }
+}
 
-// }
+//AddCartItem
+const CreateOrUpdateCartItem = async(req,res,next)=>{
+    try{
+        const productId = +req.body.productId;//req:productId
+        const customerId = req.user.id;
+        
+        const product = await prismaClient.product.findFirst({
+            where:{
+                id:productId
+            }
+        });
 
+        if(!product){
+            const err = new Error("dont have this product");
+            err.status = 404;
+            return next(err);
+        }
+        const checkItemInCart = await prismaClient.cart.findFirst({
+            where:{
+                productId:productId,
+                customerId:customerId,
+                isOrderStatus:0,
+            }
+        });
 
+        if(checkItemInCart){
+            console.log(checkItemInCart)
+            return AddItemInCart(checkItemInCart,res,next);
+        }
 
-exports.CreateCartItems = CreateCartItems;//post
+        const cartItem = await prismaClient.cart.create({
+            data:{
+                amount:1,
+                isOrderStatus:0,
+                customerId:customerId,
+                productId:productId
+            }
+        });
+
+        res.status(201).json({message:"create cartItem",cartItem});//res:cartItem
+        
+    }
+    catch(error){
+        next(error);
+    }
+}
+
+// add/update cartItem
+exports.CreateCartItems = CreateCartItems;//post  
 exports.DeleteItem = DeleteItem;//delete
+
 // exports.DeletCartItemByCustomerId = DeletCartItemByCustomerId;
 exports.IncreseAmount = IncreseAmount;//patch
 exports.DecreseAmount = DecreseAmount;//patch
 exports.GetCartByCustomerId = GetCartByCustomerId;//get
+exports.CreateOrUpdateCartItem = CreateOrUpdateCartItem;
 
