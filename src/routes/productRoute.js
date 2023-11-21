@@ -18,7 +18,7 @@ const router= express.Router();
 
 
 router.post("/add",authenticate,uploadMiddleware.single("image"),useProductController.CreateProduct);
-router.get("/home",authenticate,useProductController.GetSomeProduct);//get some product
+router.get("/home",authenticate,useProductController.GetAllProduct);//get some product
 
 router.get("/supplier",authenticate,useProductController.GetProductBySupplierId);
 

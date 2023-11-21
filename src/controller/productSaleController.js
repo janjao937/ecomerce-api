@@ -207,10 +207,10 @@ const GetProductById = async (req,res,next)=>{
 } 
 
 
-const GetSomeProduct =   async (req,res,next)=>{
+const GetAllProduct = async (req,res,next)=>{
     try{
         const products = await prismaClient.product.findMany({
-            take:20
+            // take:20
         })
         res.status(200).json({products});
     }
@@ -224,4 +224,4 @@ exports.EditProductData = EditProductData;
 exports.DeleteProduct = DeleteProduct;
 exports.GetProductById = GetProductById;
 exports.GetProductBySupplierId = GetProductBySupplierId;
-exports.GetSomeProduct = GetSomeProduct;
+exports.GetAllProduct = GetAllProduct;

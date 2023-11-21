@@ -226,7 +226,6 @@ const AddItemInCart = async(cartItem,res,next) =>{
             err.status = 404;
             return next(err);
         }
-        // console.log(cartItem.amount)
         const updateCart =await prismaClient.cart.update({
             where:{
                 id:cartItem.id,

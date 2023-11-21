@@ -24,7 +24,7 @@ const app = express();
 app.use(cors());
 app.use(rateLimit);
 app.use(express.json());
-app.use(express.static("public"))
+app.use(express.static("public"));
 
 //register/login (Authorization)
 app.use("/auth",authorizationRoute);

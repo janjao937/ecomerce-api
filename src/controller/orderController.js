@@ -82,16 +82,17 @@ const supplierGetOrder = async(req,res,next)=>{
     
         const allSupplierProduct= await prismaClient.product.findMany({
             where:{
-                supplierId:supplierId
+                supplierId:supplierId,
             },
             include:{
                 cart:{
                     include:{
-                        order:{
+                        customer:{
                             select:{
-                                id:true
+                                firstName:true,
                             }
-                        }
+                        },
+                        order:true,
                     }
                 }
             }
@@ -128,7 +129,86 @@ const updateOrder = async(req,res,next) =>{
     }
 }
 
+//0,1,2
+const updateDeliveryStatus = async(req,res,next)=>{
+    try{
+        const orderId = +req.body.orderId;
+        const deliveryStatus = +req.body.deliveryStatus;
+        // console.log(req.body)
+        const updateOrder = await prismaClient.order.findFirst({
+            where:{id:orderId}
+        });
+
+        if(!updateOrder){
+            const err = new Error("dont have this order id");
+            err.status = 404;
+            return next(err);
+        }
+
+        const updateDeliveryStatus = await prismaClient.order.update({
+            where:{
+                id:updateOrder.id,
+            },
+            data:{
+                deliveryStatus:deliveryStatus
+            }
+        });
+
+        res.status(200).json({message:"update success",updateDeliveryStatus});
+
+    }
+    catch(error){
+        next(error);
+    }
+}
+
+const deleteOrder = async(req,res,next)=>{
+    try{
+        const orderId = +req.params.orderId;
+        
+        // console.log(orderId);
+        
+        const checkOrder = await prismaClient.order.findFirst({
+            where:{
+                id:orderId
+            },
+            include:{
+                cart:true
+            }
+        });
+
+        // console.log(checkOrder.cart);
+      
+        if(!checkOrder){
+            const err = new Error("dont have this order id");
+            err.status = 404;
+            return next(err);
+        }
+    
+
+        await prismaClient.order.delete({
+            where:{
+                id:orderId
+            }
+        });
+
+        await prismaClient.cart.delete({
+            where:{
+                id:checkOrder.cart.id
+            }
+        })
+        res.status(200).json({message:"Delete Success"});
+
+    }
+    catch(error){
+        next(error);
+    }
+}
+
 exports.createOrder = createOrder;
 exports.updateOrder = updateOrder;
 exports.getOrderItemByIsOrderStatusAtCart = getOrderItemByIsOrderStatusAtCart;
 exports.supplierGetOrder = supplierGetOrder;
+
+exports.updateDeliveryStatus = updateDeliveryStatus;
+exports.deleteOrder = deleteOrder;
