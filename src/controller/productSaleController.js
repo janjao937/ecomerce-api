@@ -211,6 +211,9 @@ const GetAllProduct = async (req,res,next)=>{
     try{
         const products = await prismaClient.product.findMany({
             // take:20
+            include:{
+                supplier:true
+            }
         })
         res.status(200).json({products});
     }
