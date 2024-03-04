@@ -84,7 +84,7 @@ const DeleteProduct = async (req, res, next) => {
             }
         });
         // console.log(value.productId);
-        const a = await prismaClient.product.delete({
+        await prismaClient.product.delete({
             where: {
                 id: deleteProduct.id
             }
