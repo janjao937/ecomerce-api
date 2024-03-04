@@ -80,14 +80,16 @@ const DeleteProduct = async (req, res, next) => {
         console.log(value);
         const deleteProduct = await prismaClient.product.findFirst({
             where: {
-                id: value.id
+                id: value.productId
             }
         });
-        await prismaClient.product.delete({
+        // console.log(value.productId);
+        const a = await prismaClient.product.delete({
             where: {
                 id: deleteProduct.id
             }
         });
+        
         res.status(200).json({ message: "Delete Complete" })
     }
     catch (error) {
