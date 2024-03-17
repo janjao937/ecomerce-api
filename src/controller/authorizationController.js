@@ -76,7 +76,7 @@ const customerRegister= async(req,res,next)=>{
         //payload
         const payload = {customerId:customer.id};
         //accessToken
-        const accessToken = jwt.sign(payload,process.JWT_SECRET_KEY ||"sdadwadwqldepofpwek",
+        const accessToken = jwt.sign(payload,process.env.JWT_SECRET_KEY ||"aqqewetlkgl",
         {expiresIn:process.env.JWT_EXPIRE});
         //Delete password
         delete customer.password;
@@ -114,7 +114,7 @@ const supplierRegister= async(req,res,next)=>{
         //payload
         const payload = {supplierId:supplier.id};
         //accessToken
-        const accessToken = jwt.sign(payload,process.JWT_SECRET_KEY ||"sdadwadwqldepofpwek",
+        const accessToken = jwt.sign(payload,process.env.JWT_SECRET_KEY ||"aqqewetlkgl",
         {expiresIn:process.env.JWT_EXPIRE});
         //Delete password
         delete supplier.password;

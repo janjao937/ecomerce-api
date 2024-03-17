@@ -8,7 +8,7 @@ const router = express.Router();
 //middleware
 //path: /qr
 
-router.patch("/upload",authenticate,uploadMiddleware.single("image"),SupplierQrPaymentController.uploadQR);
+router.patch("/upload",authenticate,uploadMiddleware.single("image"),SupplierQrPaymentController.uploadQR);//"image ต้องเป็นชื่อไฟล์ที่ตรงกับหน้าบ้าน append มาจาก FormData"
 router.get("/get",authenticate,SupplierQrPaymentController.getQR);
 
 
