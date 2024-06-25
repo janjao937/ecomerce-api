@@ -110,6 +110,8 @@ const IncreseAmount=async(req,res,next)=>{
     try{
         const productId = +req.body.productId;//req:productId
         const customerId = req.user.id;
+        const quantity = req.body.quantity;
+        console.log(quantity);
 
         const cartItem = await prismaClient.cart.findFirst({
             where:{
@@ -130,7 +132,7 @@ const IncreseAmount=async(req,res,next)=>{
                 id:cartItem.id
             },
             data:{
-                amount:++cartItem.amount
+                amount:quantity
             }
         });
         
@@ -218,7 +220,7 @@ const DeleteItem = async(req,res,next)=>{
 //update code in 11/20
 
 //new add item
-const AddItemInCart = async(cartItem,res,next) =>{
+const AddItemInCart = async(cartItem,amount,res,next) =>{
     try{
         
         if(!cartItem){
@@ -232,7 +234,7 @@ const AddItemInCart = async(cartItem,res,next) =>{
                 isOrderStatus:cartItem.isOrderStatus
             },
             data:{
-                amount:++cartItem.amount
+                amount:amount
             }
         });
         
@@ -250,6 +252,7 @@ const CreateOrUpdateCartItem = async(req,res,next)=>{
     try{
         const productId = +req.body.productId;//req:productId
         const customerId = req.user.id;
+        const amount = req.body.quantity;
         
         const product = await prismaClient.product.findFirst({
             where:{
@@ -272,12 +275,12 @@ const CreateOrUpdateCartItem = async(req,res,next)=>{
 
         if(checkItemInCart){
             // console.log(checkItemInCart)
-            return AddItemInCart(checkItemInCart,res,next);
+            return AddItemInCart(checkItemInCart,amount,res,next);
         }
 
         const cartItem = await prismaClient.cart.create({
             data:{
-                amount:1,
+                amount:amount,
                 isOrderStatus:0,
                 customerId:customerId,
                 productId:productId

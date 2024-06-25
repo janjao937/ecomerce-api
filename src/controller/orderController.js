@@ -16,6 +16,7 @@ const createOrder = async(req,res,next)=>{
         const cartId = +req.body.cartId;
         const adress = req.body.adress;
         const img = req.file.filename;
+        // console.log(req.file);
   
         const newOrder = await prismaClient.order.create({
             data:{
